@@ -1,0 +1,17 @@
+[project]
+name = "copyright-check"
+version = "0.1.0"
+description = "Copyright check tool for Eclipse Kura™ projects"
+readme = "README.md"
+authors = [
+    { name = "eclipse.kura", email = "kura-dev@eclipse.org" }
+]
+requires-python = ">=3.13"
+dependencies = []
+
+[project.scripts]
+copyright-check = "copyright_check:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
