@@ -2,6 +2,8 @@
 
 Copyright check tool for Eclipse Kura™ projects
 
+This is a test
+
 ## Requirements
 
 - Python 3.13 or later
