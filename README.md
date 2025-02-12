@@ -1,5 +1,7 @@
 # Eclipse Kura™ copyright-check
 
+a change
+
 Copyright check tool for Eclipse Kura™ projects
 
 ## Requirements
