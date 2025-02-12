@@ -9,4 +9,4 @@ on:
 
 jobs:
   call-workflow-in-public-repo:
-    uses: eclipse-kura/.github/workflows/_shared-pr-lint.yml@main
+    uses: eclipse-kura/.github/.github/workflows/_shared-pr-lint.yml@main

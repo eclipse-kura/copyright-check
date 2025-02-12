@@ -7,4 +7,4 @@ on:
 
 jobs:
   call-workflow-in-public-repo:
-    uses: eclipse-kura/.github/workflows/_shared-backport.yml@main
+    uses: eclipse-kura/.github/.github/workflows/_shared-backport.yml@main
