@@ -210,7 +210,7 @@ def main():
 
         analyzed_files.append(filename)
 
-    logger.info("Found {}/{} invalid files ({} skipped)".format(len(incorrect_files), len(analyzed_files), len(skipped_files) + len(ignored_files)))
+    logger.info("Found {}/{} invalid files ({} ignored)".format(len(incorrect_files), len(analyzed_files), len(ignored_files)))
 
     if incorrect_files:
         exit(1)
