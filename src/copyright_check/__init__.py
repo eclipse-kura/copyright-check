@@ -176,6 +176,8 @@ def main():
     # Check files
     analyzed_files = []
     incorrect_files = []
+    skipped_files = []
+    ignored_files = []
 
     for filename in args.filenames:
         if not os.path.isfile(filename):
@@ -186,10 +188,12 @@ def main():
         mime_type = magic.Magic(mime=True).from_file(filename)
         if mime_type not in config["templates"] or not config["templates"][mime_type]:
             logger.debug("Unsupported file type({}): {}".format(mime_type, filename))
+            skipped_files.append(filename)
             continue
 
         if config["ignore_paths"].match_file(filename):
             logger.debug("Ignoring file: {}".format(filename))
+            ignored_files.append(filename)
             continue
 
         result = check_header(filename, config["templates"][mime_type], mime_type, config["bypass_year_check"])
@@ -206,7 +210,7 @@ def main():
 
         analyzed_files.append(filename)
 
-    logger.info("Found {}/{} invalid files".format(len(incorrect_files), len(analyzed_files)))
+    logger.info("Found {}/{} invalid files ({} skipped)".format(len(incorrect_files), len(analyzed_files), len(skipped_files) + len(ignored_files)))
 
     if incorrect_files:
         exit(1)
