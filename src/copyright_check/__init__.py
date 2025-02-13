@@ -200,8 +200,11 @@ def main():
         if result.diff:
             logger.debug("Issues for \"{}\":\n{}".format(filename, result.diff))
 
+        # Log result only if not valid or if debug is enabled
+        if not result.is_valid() or args.loglevel == logging.DEBUG:
+            logger.info("{} - {}".format(filename, result))
+
         analyzed_files.append(filename)
-        logger.info("{} - {}".format(filename, result))
 
     logger.info("Found {}/{} invalid files".format(len(incorrect_files), len(analyzed_files)))
 
