@@ -53,7 +53,7 @@ class CheckResult:
         return self.error is None
 
     def __str__(self):
-        return "FAIL (reson: {})".format(ERROR_MESSAGES[self.error]) if self.error else "OK"
+        return "FAIL (reason: {})".format(ERROR_MESSAGES[self.error]) if self.error else "OK"
 
 
 def check_header(filename, template, mime_type, bypass_year=False):
@@ -176,6 +176,8 @@ def main():
     # Check files
     analyzed_files = []
     incorrect_files = []
+    skipped_files = []
+    ignored_files = []
 
     for filename in args.filenames:
         if not os.path.isfile(filename):
@@ -186,10 +188,12 @@ def main():
         mime_type = magic.Magic(mime=True).from_file(filename)
         if mime_type not in config["templates"] or not config["templates"][mime_type]:
             logger.debug("Unsupported file type({}): {}".format(mime_type, filename))
+            skipped_files.append(filename)
             continue
 
         if config["ignore_paths"].match_file(filename):
             logger.debug("Ignoring file: {}".format(filename))
+            ignored_files.append(filename)
             continue
 
         result = check_header(filename, config["templates"][mime_type], mime_type, config["bypass_year_check"])
@@ -200,10 +204,13 @@ def main():
         if result.diff:
             logger.debug("Issues for \"{}\":\n{}".format(filename, result.diff))
 
-        analyzed_files.append(filename)
-        logger.info("{} - {}".format(filename, result))
+        # Log result only if not valid or if debug is enabled
+        if not result.is_valid() or args.loglevel == logging.DEBUG:
+            logger.info("{} - {}".format(filename, result))
 
-    logger.info("Found {}/{} invalid files".format(len(incorrect_files), len(analyzed_files)))
+        analyzed_files.append(filename)
+
+    logger.info("Found {}/{} invalid files ({} ignored)".format(len(incorrect_files), len(analyzed_files), len(ignored_files)))
 
     if incorrect_files:
         exit(1)
