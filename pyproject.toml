@@ -1,6 +1,6 @@
 [project]
 name = "copyright-check"
-version = "0.2.0"
+version = "0.3.0"
 description = "Copyright check tool for Eclipse Kura™ projects"
 readme = "README.md"
 authors = [
