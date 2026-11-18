@@ -5,7 +5,18 @@ Copyright check tool for Eclipse Kura™ projects
 ## Requirements
 
 - Python 3.13 or later
-- [libmagic](https://pypi.org/project/python-magic/)
+
+## Supported file types
+
+The file type is determined from the file extension:
+
+| Extension     | Config entry    |
+|---------------|-----------------|
+| `.java`       | `template_java` |
+| `.xml`        | `template_xml`  |
+| `.c`, `.h`    | `template_c`    |
+
+Files with any other extension are skipped.
 
 ## Usage
 
