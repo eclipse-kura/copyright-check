@@ -13,6 +13,7 @@ import pytest
 
 from copyright_check import check_header
 from copyright_check import Error
+from copyright_check import get_mime_type
 
 KURA_JAVA_TEMPLATE = '''\
 ******************************************************************************
@@ -82,7 +83,23 @@ ESF_XML_TEMPLATE = '''\
     ])
 def test_check_header(template, filename, yearbypass, expected):
 
-    mime_type = "text/x-java" if filename.endswith(".java") else "text/xml"
+    mime_type = get_mime_type(filename)
 
     result = check_header(filename, template, mime_type, yearbypass)
     assert result.error == expected, f"Expected {expected}, but got {result.error} for \"{filename}\". Diff:\n{result.diff}"
+
+
+@pytest.mark.parametrize(
+    "filename,expected",
+    [
+        ('Foo.java', 'text/x-java'),
+        ('path/to/Foo.JAVA', 'text/x-java'),
+        ('pom.xml', 'text/xml'),
+        ('main.c', 'text/x-c'),
+        ('main.h', 'text/x-c'),
+        ('script.py', None),
+        ('README', None),
+        ('archive.java.bak', None),
+    ])
+def test_get_mime_type(filename, expected):
+    assert get_mime_type(filename) == expected

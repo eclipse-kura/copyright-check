@@ -15,7 +15,6 @@ import datetime
 import logging
 import os
 import re
-import magic
 
 from enum import Enum
 
@@ -31,6 +30,22 @@ SUPPORTED_LANGUAGES = {
     'xml': 'text/xml',
     'c': 'text/x-c'
 }
+
+# File type is determined from the file extension: content-based detection (libmagic)
+# is unreliable and may report e.g. "text/plain" for valid Java sources.
+FILE_EXTENSIONS = {
+    '.java': 'java',
+    '.xml': 'xml',
+    '.c': 'c',
+    '.h': 'c'
+}
+
+
+def get_mime_type(filename):
+    extension = os.path.splitext(filename)[1].lower()
+    language = FILE_EXTENSIONS.get(extension)
+    return SUPPORTED_LANGUAGES[language] if language else None
+
 
 class Error(Enum):
     HEADER_MISSING = 1
@@ -184,10 +199,10 @@ def main():
             logger.info("File not found: {}".format(filename))
             continue
 
-        # Retrieve mime type
-        mime_type = magic.Magic(mime=True).from_file(filename)
-        if mime_type not in config["templates"] or not config["templates"][mime_type]:
-            logger.debug("Unsupported file type({}): {}".format(mime_type, filename))
+        # Retrieve mime type from file extension
+        mime_type = get_mime_type(filename)
+        if mime_type is None or not config["templates"].get(mime_type):
+            logger.debug("Unsupported file type: {}".format(filename))
             skipped_files.append(filename)
             continue
 
